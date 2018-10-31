@@ -1,0 +1,9 @@
+/*
+* game api container
+* ApiName == > getGamePassword modifyGamePassword
+* */
+
+{
+    "getGamePassword": "getGamePassword",
+    "modifyGamePassword": "modifyGamePassword"
+}

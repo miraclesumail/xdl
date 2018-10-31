@@ -1,0 +1,46 @@
+/*
+  页面样式重置
+*/
+/*移动端默认样式*/
+/*清除掉按下时会有一个灰色阴影*/
+a,input,button{
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  outline: none;
+}
+/*清除掉ios自带圆角*/
+input,button{
+  -webkit-appearance: none;//消除输入框核按钮的默认外观
+border-radius: 0;
+}
+body{
+  /*禁止选中文字*/
+  -webkit-user-select: none;
+  /* iPhone 和 Android 的浏览器纵向 (Portrate mode) 和橫向 (Landscape mode) 模式皆有自动调整字体大小的功能。控制它的就是 CSS 中的 -webkit-text-size-adjust。关闭字体大小自动调整功能*/
+  -webkit-text-size-adjust: 100%;
+}
+/*字体设置*/
+body *{
+/*//每台设备里的默认字体是不一样的（移动端设备里大多数没有宋体和微软雅黑字体）*/
+
+}
+html,body,h1,h2,h3,h4,h5,h6,div,dl,dt,dd,ul,ol,li,p,blockquote,pre,hr,figure,table,caption,th,td,form,fieldset,legend,input,button,textarea,menu{margin:0;padding:0;}
+header,footer,section,article,aside,nav,hgroup,address,figure,figcaption,menu,details{display:block;}
+table{border-collapse:collapse;border-spacing:0;}
+caption,th{text-align:left;font-weight:normal;}
+html,body,fieldset,img,iframe,abbr{border:0;}
+i,cite,em,var,address,dfn{font-style:normal;}
+[hidefocus],summary{outline:0;}
+li{list-style:none;}
+h1,h2,h3,h4,h5,h6,small{font-size:100%;}
+sup,sub{font-size:83%;}
+pre,code,kbd,samp{font-family:inherit;}
+q:before,q:after{content:none;}
+textarea{overflow:auto;resize:none;}
+label,summary{cursor:default;}
+a,button{cursor:pointer;}
+h1,h2,h3,h4,h5,h6,em,strong,b{font-weight:bold;}
+del,ins,u,s,a,a:hover{text-decoration:none;}
+body,textarea,input,button,select,keygen,legend{font-size:12px;font-family: helvetica, "Microsoft YaHei";color:#333;outline:0;}
+/*body{background:#fff;}*/
+a,a:hover{color:#333;}
+

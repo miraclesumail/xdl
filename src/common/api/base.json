@@ -1,0 +1,20 @@
+// base api container
+// LoginApiName == > create register login logout isValidUsername getSMSCode verifyPhoneNumberBySMSCode captcha
+// UserInfoApiName == > get
+// MailApiName == > getUnreadMail getMailList readMail deleteAllMail deleteMail
+{
+    "login": "login", //用户和代理登录接口 | login
+    "logout": "logout", // 用户和代理退出接口 | logout from the system
+    "register": "register", // 玩家开户 | send new data to register account
+    "create": "create", // 玩家开户 | send new data to register account
+    "isValidUsername": "isValidUsername", // 验证开户用户名是否有效 | check if username is valid upon registration
+    "getSMSCode": "getSMSCode", // 获取手机验证码 | get mobile phone verification code
+    "verifyPhoneNumberBySMSCode": "verifyPhoneNumberBySMSCode", // 验证玩家手机是否正确 | validate mobile phone verification code
+    "captcha": "captcha", // 获取登录验证码 | validate user state (for bots)
+    "get": "get", // 获取用户信息 | get user information
+    "getUnreadMail": "getUnreadMail", // 获取未读站内信 | get unread messages
+    "getMailList": "getMailList", // 获取玩家站内信 | get all messages
+    "deleteMail": "deleteMail", // 删除站内信 | delete one message
+    "readMail": "readMail", // 查看信件 | open and read a message
+    "deleteAllMail": "deleteAllMail" // 删除所有站内信 | delete all messages
+}
