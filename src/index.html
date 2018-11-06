@@ -1,0 +1,150 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        .container{width:220px;background: #000000af;padding: 10px}
+
+        .container div{width: 100%; display: flex;margin-bottom: 10px}
+        .container div span{flex:1;color:pink;text-align: center}
+        .container div span.inactive{flex:1;color:#ffffff}
+
+        .container div.title{justify-content: space-around}
+    </style>
+</head>
+<body>
+    <script>
+         function getDaysInOneMonth(year, month){
+            month = parseInt(month, 10);
+            var d= new Date(year, month, 0);
+            return d.getDate();
+         }
+
+         class calendar {
+            constructor(){
+                this.container = document.createElement('div')
+                this.container.setAttribute('class', 'container')
+
+                let header = document.createElement('div')
+                header.setAttribute('class', 'header')
+
+                let title = document.createElement('div')
+                title.setAttribute('class', 'title')
+                let yearMonth = document.createElement('div')
+                let changeDate = document.createElement('div')
+
+                let up = document.createElement('span')
+                up.textContent = 'up'
+                let down = document.createElement('span')
+                down.textContent = 'down'
+                changeDate.appendChild(up)
+                changeDate.appendChild(down)
+
+                this.month = new Date().getMonth();
+
+                up.addEventListener('click', () => {
+                    this.month = this.month - 1
+                    this.generateDate(new Date().getFullYear(), this.month)
+                }, false)
+
+                title.appendChild(yearMonth)
+                title.appendChild(changeDate)
+
+                this.title = title
+
+                let date = ['一', '二', '三', '四', '五', '六', '日'] 
+                date.forEach((v,i) => {
+                    let span = document.createElement('span')
+                    span.textContent = v
+                    header.appendChild(span)
+                })
+               
+                this.container.appendChild(this.title)
+                this.container.appendChild(header)
+
+            }
+
+            init(){
+                // 29 30 31 1
+                let totalArr = this.getDateArr(new Date().getFullYear(), this.month)
+                totalArr.forEach((item, index) => {
+                     let dateLine = document.createElement('div')
+                     dateLine.setAttribute('class', 'dateLine')
+                     item.forEach((v,i) => {
+                          let span = document.createElement('span')
+                          span.textContent = v
+                          if(index == 0 && v > 7)
+                             span.setAttribute('class', 'inactive')
+
+                          if(index == totalArr.length - 1 && v < 7) 
+                             span.setAttribute('class', 'inactive')  
+                             
+                          dateLine.appendChild(span)
+                     })
+                     this.container.appendChild(dateLine)
+                })
+                document.body.appendChild(this.container)
+            }
+
+            getDateArr(year, month){
+                console.log(month)
+                let d = new Date(year, month), theMaxDay = getDaysInOneMonth(year, month); //创建数组
+                d.setDate(1)
+                let day = d.getDay(), theLastDay;
+                console.log(day)
+                if(day != 1){
+                   theLastDay = getDaysInOneMonth(year, month - 1)
+                }
+
+                let totalArr = []
+                for(let i = 0; i<5; i++){
+                    let tempArr = []
+                    for(let j = 0; j < 7; j++){
+                        if(i == 0 ){
+                          j < (day-1) ? tempArr.push(theLastDay + j - (day - 2)) : tempArr.push(j + 2 - day)
+                        }else{
+                          tempArr.length ? tempArr.push(tempArr[tempArr.length - 1] + 1 > theMaxDay ? tempArr[tempArr.length - 1] + 1 - theMaxDay : tempArr[tempArr.length - 1] + 1) : tempArr.push(totalArr[i - 1][totalArr[i - 1].length - 1] + 1)
+                        }
+                    }
+                    totalArr.push(tempArr)
+                }
+                console.log(totalArr)
+                this.title.querySelector('div').innerHTML = `${year}年/${month + 1}月`
+                return totalArr
+            }
+
+            generateDate(year, month){
+                let totalArr = this.getDateArr(year, month);
+                let temps = document.querySelectorAll('.dateLine')
+                console.log(temps)
+                Array.prototype.slice.call(temps, 0).forEach(item => {
+                    this.container.removeChild(item)
+                })
+                
+                totalArr.forEach((item, index) => {
+                     let dateLine = document.createElement('div')
+                     dateLine.setAttribute('class', 'dateLine')
+                     item.forEach((v,i) => {
+                          let span = document.createElement('span')
+                          span.textContent = v
+                          if(index == 0 && v > 7)
+                             span.setAttribute('class', 'inactive')
+
+                          if(index == totalArr.length - 1 && v < 7) 
+                             span.setAttribute('class', 'inactive')  
+                             
+                          dateLine.appendChild(span)
+                     })
+                     this.container.appendChild(dateLine)
+                })
+
+            }
+        
+        }
+        new calendar().init()
+    </script>
+</body>
+</html>
