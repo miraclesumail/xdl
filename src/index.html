@@ -6,22 +6,33 @@
     <title>Document</title>
 
     <style>
-        .container{width:220px;background: #000000af;padding: 10px}
+        .container{width:220px;background: #000000af;padding: 10px; position: relative;min-height: 200px;overflow: hidden;}
+       
+        /* .container div:not(.dateContainer){width: 100%; display: flex;margin-bottom: 10px} */
 
-        .container div{width: 100%; display: flex;margin-bottom: 10px}
+        .container .title{position: absolute; z-index: 100;width: 100%;left:0;display: flex;box-sizing: border-box;padding: 10px 10px;background: rgb(94, 91, 88);top:0}
+        .container .header{position: absolute; z-index: 100; width: 100%;left:0;display: flex;box-sizing: border-box;padding: 10px; top:39px;background: rgb(94, 91, 88)}
+        .container .dateLine{width: 100%; display: flex;margin-bottom: 10px}
+
+        .container .dateContainer{transition: all .5s}
+        .container .dateContainer:not(.axiba){position: absolute; z-index: 100; width: calc(100% - 20px);left:10px; bottom:0;}
+        .container .dateContainer.axiba{width: calc(100% - 20px); position: absolute;bottom: 140px;left:10px;z-index:-1;}
         .container div span{flex:1;color:pink;text-align: center}
         .container div span.inactive{flex:1;color:#ffffff}
 
         .container div.title{justify-content: space-around}
+
+        .container .dateContainer.bottom{bottom: 0px;}
+        .container .dateContainer.godown{transform: translateY(100%)}
     </style>
 </head>
 <body>
     <script>
          function getDaysInOneMonth(year, month){
-            month = parseInt(month, 10);
+            month = parseInt(month+1, 10);
             var d= new Date(year, month, 0);
             return d.getDate();
-         }
+         } 
 
          class calendar {
             constructor(){
@@ -48,6 +59,7 @@
                 up.addEventListener('click', () => {
                     this.month = this.month - 1
                     this.generateDate(new Date().getFullYear(), this.month)
+
                 }, false)
 
                 title.appendChild(yearMonth)
@@ -64,6 +76,12 @@
                
                 this.container.appendChild(this.title)
                 this.container.appendChild(header)
+
+                // date容器
+                let dateContainer = document.createElement('div')
+                dateContainer.setAttribute('class', 'dateContainer')
+                this.dateContainer = dateContainer
+                this.container.appendChild(this.dateContainer)
 
             }
 
@@ -84,7 +102,8 @@
                              
                           dateLine.appendChild(span)
                      })
-                     this.container.appendChild(dateLine)
+                     //this.container.appendChild(dateLine)
+                     this.dateContainer.appendChild(dateLine)
                 })
                 document.body.appendChild(this.container)
             }
@@ -120,10 +139,12 @@
                 let totalArr = this.getDateArr(year, month);
                 let temps = document.querySelectorAll('.dateLine')
                 console.log(temps)
-                Array.prototype.slice.call(temps, 0).forEach(item => {
-                    this.container.removeChild(item)
-                })
-                
+
+                // Array.prototype.slice.call(temps, 0).forEach(item => {
+                //     this.dateContainer.removeChild(item)
+                // })
+                let dateContainer = document.createElement('div')
+                dateContainer.setAttribute('class', 'dateContainer axiba')
                 totalArr.forEach((item, index) => {
                      let dateLine = document.createElement('div')
                      dateLine.setAttribute('class', 'dateLine')
@@ -138,9 +159,25 @@
                              
                           dateLine.appendChild(span)
                      })
-                     this.container.appendChild(dateLine)
+                       
+                     dateContainer.appendChild(dateLine)       
+                     //this.container.appendChild(dateLine)   
                 })
+                this.container.insertBefore(dateContainer, this.dateContainer)
+                setTimeout(() => {
+                    dateContainer.classList.remove('axiba')
+                    dateContainer.classList.add('bottom')
 
+                    this.dateContainer.classList.add('godown')
+                },100)
+
+                this.dateContainer.addEventListener('transitionend', () => {
+                    console.log('axibbaba')
+                    this.container.removeChild(this.dateContainer)
+                    this.dateContainer = dateContainer
+                },false)
+
+                
             }
         
         }
