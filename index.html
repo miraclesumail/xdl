@@ -33,3 +33,351 @@
 </script>
 </body>
 </html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+   <style>
+     *{padding: 0;margin: 0}
+     .container{position: absolute;width: 210px;height: 210px;left:50%;transform: translateX(-50%);top:20px; background: #f5d300}
+     canvas{position: absolute;left:50%;transform: translateX(-50%);top:20px;}
+
+     .circle{position: absolute; background: blue; width: 30px; height: 30px; border-radius: 50%; text-align: center; line-height: 30px; font-size: 18px;color: orange}
+  
+  
+     .circle.choose::after{
+         display: block;
+         position: absolute;
+         content: '';
+         width:20px;
+         height: 20px;
+         left:5px;top:5px;
+         background: chocolate;
+         opacity: .5;
+         border-radius: 50%
+     }
+   </style>
+</head>
+<body>
+        <div class="container"></div>
+        <canvas id="gesture" width="210" height="210"></canvas>
+
+        <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+        <script type="text/javascript">
+        // 10  100 30 30 30
+         function Canvas2D($canvas)
+        {
+            var context = $canvas[0].getContext("2d"),
+                width = $canvas[0].width,
+                height = $canvas[0].height,
+                pageOffset = $canvas.offset();
+         
+         
+            context.font = "24px Verdana, Geneva, sans-serif";
+            context.textBaseline = "top";
+         
+            this.context = $canvas[0].getContext("2d")
+            /**
+             * 绘制矩形
+             * @param start
+             * @param end
+             * @param isFill
+             */
+            this.drawRect = function (start, end, isFill)
+            {
+                var w = end.x - start.x , h = end.y - start.y;
+                if (isFill)
+                {
+                    context.fillRect(start.x, start.y, w, h);
+                }
+                else
+                {
+                    context.strokeRect(start.x, start.y, w, h);
+                }
+            };
+         
+            /**
+             * 根据书写的文本，得到该文本在canvas上书写的中心位置的左上角坐标
+             * @param text
+             * @returns {{x: number, y: number}}
+             */
+            this.caculateTextCenterPos = function (text)
+            {
+                var metrics = context.measureText(text);
+                console.log(metrics);
+        //        context.font = fontSize + "px Verdana, Geneva, sans-serif";
+                var textWidth = metrics.width;
+                var textHeight = parseInt(context.font);
+         
+                return {
+                    x: width / 2 - textWidth / 2,
+                    y: height / 2 - textHeight / 2
+                };
+            }
+            this.width = function ()
+            {
+                return width;
+            }
+            this.height = function ()
+            {
+                return height;
+            }
+            this.resetOffset = function ()
+            {
+                pageOffset = $canvas.offset();
+            }
+            /**
+             * 当屏幕大小发生变化，重新计算offset
+             */
+            $(window).resize(function ()
+            {
+                pageOffset = $canvas.offset();
+            });
+         
+            /**
+             * 将页面上的左边转化为canvas中的坐标
+             * @param pageX
+             * @param pageY
+             * @returns {{x: number, y: number}}
+             */
+            this.getCanvasPoint = function (pageX, pageY)
+            {
+                return{
+                    x: pageX - pageOffset.left,
+                    y: pageY - pageOffset.top
+                }
+            }
+            /**
+             * 清除区域，此用户鼠标擦出刮奖涂层
+             * @param start
+             * @returns {*}
+             */
+            this.clearRect = function ()
+            {
+                context.clearRect(0, 0, width, height);
+                return this;
+            };
+         
+            /**
+             *将文本绘制到canvas的中间
+             * @param text
+             * @param fill
+             */
+            this.drawTextInCenter = function (text, fill)
+            {
+                var point = this.caculateTextCenterPos(text);
+                if (fill)
+                {
+                    context.fillText(text, point.x, point.y);
+                }
+                else
+                {
+                    context.strokeText(text, point.x, point.y);
+                }
+            };
+            /**
+             * 设置画笔宽度
+             * @param newWidth
+             * @returns {*}
+             */
+            this.penWidth = function (newWidth)
+            {
+                if (arguments.length)
+                {
+                    context.lineWidth = newWidth;
+                    return this;
+                }
+                
+                return context.lineWidth;
+            };
+         
+            /**
+             * 设置画笔颜色
+             * @param newColor
+             * @returns {*}
+             */
+            this.penColor = function (newColor)
+            {
+                if (arguments.length)
+                {
+                    console.log('dddddddddd')
+                    context.strokeStyle = 'orange';
+                    context.fillStyle = newColor;
+                    return this;
+                }
+                
+                return context.strokeStyle;
+            };
+         
+            /**
+             * 设置字体大小
+             * @param fontSize
+             * @returns {*}
+             */
+            this.fontSize = function (fontSize)
+            {
+                if (arguments.length)
+                {
+                    context.font = fontSize + "px Verdana, Geneva, sans-serif";
+         
+                    return this;
+                }
+         
+                return context.fontSize;
+            }
+         
+         
+        }
+        
+</script>    
+
+<script>
+      var attr = {
+            frontFillColor: "blue",
+            backFillColor: "#f5d300",
+            backFontColor: "red",
+            backFontSize: 18,
+        }, canvas = new Canvas2D($('#gesture'));
+
+        canvas.penColor(attr.backFillColor);
+        canvas.fontSize(attr.backFontSize);
+        //canvas.drawRect({x: 0, y: 0}, {x: canvas.width(), y: canvas.height()}, true);
+
+        
+
+        // 10  100 30 30 30   50
+        let arr = [], startPoint, pathArr = [], container = $('.container');
+
+        function getPoints(number){
+            let row = Math.floor(number/3), col = number % 3;
+            let x = 10 + col*(30+50), y = 10 + row*(30+50)
+            return {x,y}
+        }
+
+        for(let i = 0; i < 9; i++){
+            //canvas.penColor('blue');
+            //canvas.context.fillStyle = 'blue'
+            let temp = getPoints(i)
+            arr.push(temp)
+            console.log(temp)
+            let circle = $(`<div class="circle">${i+1}</div>`)
+            circle.css('left', temp.x + 'px')
+            circle.css('top', temp.y + 'px')
+            container.append(circle)  
+
+        }
+
+
+
+        document.addEventListener('touchstart', (e) => {
+               console.log(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
+               let x = e.changedTouches[0].clientX, y = e.changedTouches[0].clientY;
+               console.log(x,y)
+               console.log(document.body.offsetWidth)
+
+               //let gapX = x - (item.x + document.body.offsetWidth - 105, gapY = y - (item.y + 10);
+               try{
+                    arr.forEach((item,index) => {
+                        let gapX = x - (item.x + 15 + document.body.offsetWidth/2 - 105 ), gapY = y - (item.y + 15 + 20)
+                        console.log(gapX, gapY)
+                        if(Math.abs(gapX) < 15 && Math.abs(gapY) < 15){
+                            console.log('axiba')
+                            $('.circle').eq(index).addClass('choose')
+                            startPoint = {x:item.x + 30, y:item.y + 30}
+                            pathArr.push(index)
+                            throw BreakException
+                        }
+                        console.log(item)
+                    })
+                }catch(e){
+
+                }
+                finally{
+                }
+               }            
+        , false)
+
+        document.addEventListener('touchmove', (e) => {
+            let x = e.changedTouches[0].clientX, y = e.changedTouches[0].clientY;
+            
+            canvas.context.beginPath();
+            canvas.context.lineWidth = 3
+            
+
+            if(judge(x,y).inRange){
+                console.log('还嘻嘻嘻')
+                
+                console.log(pathArr)
+
+                startPoint = judge(x,y).data
+                let tempXY = {x:startPoint.x - 15, y:startPoint.y - 15}, position = getIndex(arr, tempXY)
+                console.log(position)
+                $('.circle').eq(judge(x,y).position).addClass('choose')
+                
+                //console.log(getIndex(arr, tempXY))
+            
+                if(pathArr.indexOf(position) == -1){
+                    console.log('qweasd')
+                    //console.log(arr.indexOf(tempXY))
+                    pathArr.push(arr.indexOf(position))
+                }
+                  
+                canvas.context.lineTo(judge(x,y).data.x, judge(x,y).data.y);
+            }else{
+                canvas.clearRect()
+                canvas.context.moveTo(startPoint.x,startPoint.y);
+                console.log('aaaaa')
+                canvas.context.lineTo(x - (document.body.offsetWidth/2 - 105) ,y - 20);
+            }
+            canvas.context.stroke()
+            canvas.context.closePath()
+        }, false)
+
+        document.addEventListener('touchend', (e) => { 
+            //canvas.clearRect()
+        }, false)
+
+        function judge(x,y){
+            let inRange = false, data, position;
+            try{
+                arr.forEach((item, index) => {
+                    let a = item.x + 15 + document.body.offsetWidth/2 - 105, b = item.y + 35
+                    if(Math.abs(x - a) < 15 && Math.abs(y - b) < 15){                     
+                        inRange = true
+                        position = index
+                        data = {x:item.x + 15, y:item.y + 15}
+                        throw BreakException
+                    }                  
+                })
+            }catch(e){
+            }
+            finally{
+            }
+            return {inRange, data, position}
+        }
+
+        function compare(arr, oldArr){
+            if(arr.length != oldArr.length)
+              return false
+            for(let i = 0 ;i<arr.length; i++){
+                if(arr[i] != oldArr[i])
+                  return false
+            }  
+            return true
+        }
+
+        function getIndex(arr,obj){
+            for(var i = 0; i < arr.length; i++){
+                if(arr[i].x == obj.x && arr[i].y == obj.y)
+                  return i
+            }
+        }
+
+</script>
+</body>
+</html>
